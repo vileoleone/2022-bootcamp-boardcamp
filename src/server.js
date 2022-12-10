@@ -2,35 +2,23 @@ import express, { json } from "express"
 import pkg from "pg"
 import dotenv from "dotenv"
 import joi from "joi"
+import categoryRoutes from "./routes/Categories.routes.js"
 dotenv.config();
 
 const app = express()
 app.use(express.json());
-
+app.use(categoryRoutes)
+/* 
 const { Pool } = pkg;
 
 const connection = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
-
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Server running in port ${port}`));
-
+    connectionString: process.env.DATABASE_URL, 
+    ssl: true
+}); */
 
 app.get("/categories", async (req, res) => {
 
-    try {
-
-        const categories = await connection.query("SELECT * FROM categories");
-        res.status(201).send(categories.rows);
-
-    } catch (error) {
-
-        console.log(error)
-
-    }
-
-
+    
 
 });
 
@@ -62,14 +50,8 @@ app.post("/categories", async (req, res) => {
 
     // if categories then ...
 
-    try {
-        await connection.query(
-            "INSERT INTO categories (name) VALUES ($1)",
-            [name]
-        );
-    } catch (error) {
-        console.log(error)
-    }
-
     res.send(201);
-});
+}); 
+
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Server running in port ${port}`));
