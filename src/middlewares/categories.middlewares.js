@@ -32,7 +32,7 @@ export  async function postBodySQLValidation(req, res, next) {
     } catch (error) {
         console.log(error)
     }
-
+    
     res.locals.name = req.body
     next()
 

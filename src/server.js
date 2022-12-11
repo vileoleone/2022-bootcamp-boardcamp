@@ -3,11 +3,16 @@ import pkg from "pg"
 import dotenv from "dotenv"
 import joi from "joi"
 import categoryRoutes from "./routes/Categories.routes.js"
+import gameRoutes from "./routes/Games.routes.js"
+import customerRoutes from "./routes/clients.routes.js"
+
 dotenv.config();
 
 const app = express()
 app.use(express.json());
-app.use(categoryRoutes)
+app.use(categoryRoutes);
+app.use(gameRoutes);
+app.use(customerRoutes);
 /* 
 const { Pool } = pkg;
 
