@@ -56,7 +56,7 @@ export async function getAllInRentals(req, res) {
 
             const getRentalList = [];
             const rentalList = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals WHERE "customerId" = $1`, [customerId]);
-            
+
             if (rentalList.rows.length === 0) {
                 res.status(404).send("No customeId found")
                 return
@@ -68,13 +68,13 @@ export async function getAllInRentals(req, res) {
                 const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
 
                 getRentalList.push({
-                    id,customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
                     customer: customerObj.rows[0],
                     games: gameObj.rows[0]
                 })
             }
             res.status(200).send(getRentalList)
-            
+
         } catch (error) {
             res.status(500).send(error.message)
         }
@@ -92,7 +92,7 @@ export async function getAllInRentals(req, res) {
                 res.status(404).send("No gameId found")
                 return
             }
- 
+
             for (const rental of rentalList.rows) {
                 const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
 
@@ -109,6 +109,90 @@ export async function getAllInRentals(req, res) {
         } catch (error) {
             res.status(500).send(error.message)
         }
+        return
+    }
+
+    if (req.query.limit && req.query.offset) {
+
+        try {
+
+            const getRentalList = [];
+            const rentalList = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals OFFSET $1 LIMIT $2`, [req.query.offset, req.query.limit]);
+
+            for (const rental of rentalList.rows) {
+                const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+
+                const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
+                const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
+
+                getRentalList.push({
+                    id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    customer: customerObj.rows[0],
+                    games: gameObj.rows[0]
+                })
+            }
+            res.status(200).send(getRentalList)
+
+        } catch (error) {
+            res.status(500).send(error.message)
+        }
+
+        return
+    }
+
+    if (req.query.limit) {
+
+        try {
+
+            const getRentalList = [];
+            const rentalList = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals LIMIT $1`, [req.query.limit]);
+
+            for (const rental of rentalList.rows) {
+                const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+
+                const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
+                const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
+
+                getRentalList.push({
+                    id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    customer: customerObj.rows[0],
+                    games: gameObj.rows[0]
+                })
+            }
+            res.status(200).send(getRentalList)
+
+        } catch (error) {
+            res.status(500).send(error.message)
+        }
+
+        return
+    }
+
+    if (req.query.offset) {
+
+        try {
+
+            const getRentalList = [];
+            const rentalList = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals OFFSET $1`, [req.query.offset]);
+
+            for (const rental of rentalList.rows) {
+                const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+
+                const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
+                const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
+                
+                getRentalList.push({
+                    id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    customer: customerObj.rows[0],
+                    games: gameObj.rows[0]
+                })
+            }
+            res.status(200).send(getRentalList)
+
+        } catch (error) {
+            res.status(500).send(error.message)
+        }
+
         return
     }
 
@@ -137,9 +221,9 @@ export async function getAllInRentals(req, res) {
 }
 
 export async function DeleteInRentals(req, res) {
-    
+    try {
         const rentalList = await connectionSQL.query("SELECT * FROM rentals WHERE id = $1", [req.params.id]);
-       
+
         if (rentalList.rows.length === 0) {
             res.status(404).send("The id does not exist in the database")
             return
@@ -149,7 +233,7 @@ export async function DeleteInRentals(req, res) {
             res.status(400).send("The game has not been returned")
             return
         }
-        
+
         const rentalListToDelete = await connectionSQL.query("DELETE FROM rentals WHERE id = $1", [req.params.id]);
         res.status(200)
 

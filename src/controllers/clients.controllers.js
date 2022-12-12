@@ -2,7 +2,6 @@ import { connectionSQL } from "../database/database.js";
 
 export async function getAllCustomers(req, res) {
     const cpf = req.query.cpf
-    
     if (cpf) {
 
         try {
@@ -17,6 +16,49 @@ export async function getAllCustomers(req, res) {
         }
         return
     }
+    
+    if (req.query.limit && req.query.offset) {
+
+        try {
+
+            const customers = await connectionSQL.query(`SELECT *, TO_CHAR(birthday, 'DD-MM-YYYY') AS birthday FROM customers OFFSET $1 LIMIT $2`, [req.query.offset,req.query.limit])
+            res.status(200).send(customers.rows);
+
+        } catch (error) {
+
+            res.status(500).send(error.message)
+        }
+        return
+    }
+    
+    if (req.query.limit) {
+
+        try {
+
+            const customers = await connectionSQL.query(`SELECT *, TO_CHAR(birthday, 'DD-MM-YYYY') AS birthday FROM customers  LIMIT $1`, [req.query.limit])
+            res.status(200).send(customers.rows);
+
+        } catch (error) {
+
+            res.status(500).send(error.message)
+        }
+        return
+    }
+
+    if (req.query.offset) {
+
+        try {
+
+            const customers = await connectionSQL.query(`SELECT *, TO_CHAR(birthday, 'DD-MM-YYYY') AS birthday FROM customers  OFFSET $1`, [req.query.offset])
+            res.status(200).send(customers.rows);
+
+        } catch (error) {
+
+            res.status(500).send(error.message)
+        }
+        return
+    }
+
 
     try {
         

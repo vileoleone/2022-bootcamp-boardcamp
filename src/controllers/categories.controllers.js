@@ -14,10 +14,52 @@ export async function postNameInCategory(req, res) {
 }
 
 export async function getAllInCategory(req, res) {
+    
+    
+    if (req.query.limit && req.query.offset) {
+
+        try {
+            const categories = await connectionSQL.query(`SELECT * FROM categories OFFSET $1 LIMIT $2`, [req.query.offset, req.query.limit]);
+            res.status(200).send(categories.rows)
+
+        } catch (err) {
+            res.status(500).send(err.message)
+        }
+
+        return
+    }
+
+    if (req.query.limit) {
+
+        try {
+            const categories = await connectionSQL.query(`SELECT * FROM categories LIMIT $1`, [req.query.limit]);
+            res.status(200).send(categories.rows)
+
+        } catch (err) {
+            res.status(500).send(err.message)
+        }
+
+        return
+    }
+
+    if (req.query.offset) {
+
+        try {
+            const categories = await connectionSQL.query(`SELECT * FROM categories OFFSET $1`, [req.query.offset]);
+            res.status(200).send(categories.rows)
+
+        } catch (err) {
+            res.status(500).send(err.message)
+        }
+
+        return
+    }
+        
+    
     try {
 
         const categories = await connectionSQL.query("SELECT * FROM categories");
-        res.status(201).send(categories.rows);
+        res.status(200).send(categories.rows);
 
     } catch (error) {
 
