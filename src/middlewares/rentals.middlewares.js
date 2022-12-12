@@ -78,7 +78,7 @@ export async function rentalBodySQLValidation(req, res, next) {
 }
 
 export async function rentalUpdateValidation(req, res, next) {
-
+    console.log(req.params.id)
     try {
 
         const rentalIdValidation = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals WHERE id= $1`, [req.params.id]);

@@ -138,7 +138,6 @@ export async function getAllInRentals(req, res) {
 
 export async function DeleteInRentals(req, res) {
 
-
     try {
         const rentalList = await connectionSQL.query("SELECT * FROM rentals WHERE id = $1", [req.params.id]);
         console.log(rentalList.rows[0])

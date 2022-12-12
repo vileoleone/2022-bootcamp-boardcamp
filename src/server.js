@@ -6,10 +6,11 @@ import categoryRoutes from "./routes/Categories.routes.js"
 import gameRoutes from "./routes/Games.routes.js"
 import customerRoutes from "./routes/clients.routes.js"
 import rentalsRoutes from "./routes/rentals.routes.js"
-
+import cors from "cors"
 dotenv.config();
 
-const app = express()
+const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(categoryRoutes);
 app.use(gameRoutes);
