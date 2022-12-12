@@ -5,6 +5,7 @@ import joi from "joi"
 import categoryRoutes from "./routes/Categories.routes.js"
 import gameRoutes from "./routes/Games.routes.js"
 import customerRoutes from "./routes/clients.routes.js"
+import rentalsRoutes from "./routes/rentals.routes.js"
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(categoryRoutes);
 app.use(gameRoutes);
 app.use(customerRoutes);
+app.use(rentalsRoutes)
 /* 
 const { Pool } = pkg;
 

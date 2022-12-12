@@ -7,5 +7,5 @@ const router = Router()
 router.get("/customers", getAllCustomers);
 router.get("/customers/:id", getCustomersById)
 router.post("/customers", customersBodySchemaValidation, customersBodySQLValidation, postCustomer);
-router.post("/customers/:id", customersBodySchemaValidation, postIdCustomer )
+router.post("/customers/:id", customersBodySchemaValidation, customersBodySQLValidation, postIdCustomer )
 export default router;
