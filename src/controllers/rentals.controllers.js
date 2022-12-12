@@ -62,13 +62,13 @@ export async function getAllInRentals(req, res) {
                 return
             }
             for (const rental of rentalList.rows) {
-                const { customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+                const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
 
                 const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
                 const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
 
                 getRentalList.push({
-                    customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    id,customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
                     customer: customerObj.rows[0],
                     games: gameObj.rows[0]
                 })
@@ -94,13 +94,13 @@ export async function getAllInRentals(req, res) {
             }
  
             for (const rental of rentalList.rows) {
-                const { customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+                const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
 
                 const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
                 const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
 
                 getRentalList.push({
-                    customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                    id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
                     customer: customerObj.rows[0],
                     games: gameObj.rows[0]
                 })
@@ -118,13 +118,13 @@ export async function getAllInRentals(req, res) {
         const rentalList = await connectionSQL.query(`SELECT *, TO_CHAR("rentDate", 'DD-MM-YYYY') AS "rentDate" FROM rentals`);
 
         for (const rental of rentalList.rows) {
-            const { customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
+            const { id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee } = rental
 
             const customerObj = await connectionSQL.query(`SELECT customers.id, customers.name from customers WHERE id = $1;`, [customerId])
             const gameObj = await connectionSQL.query(`SELECT games.id, games.name, games."categoryId", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.id = $1;`, [gameId])
 
             getRentalList.push({
-                customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
+                id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee,
                 customer: customerObj.rows[0],
                 games: gameObj.rows[0]
             })
@@ -137,11 +137,9 @@ export async function getAllInRentals(req, res) {
 }
 
 export async function DeleteInRentals(req, res) {
-
-    try {
+    
         const rentalList = await connectionSQL.query("SELECT * FROM rentals WHERE id = $1", [req.params.id]);
-        console.log(rentalList.rows[0])
-
+       
         if (rentalList.rows.length === 0) {
             res.status(404).send("The id does not exist in the database")
             return
